@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMERG Data Download Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .step {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 1.2em;
+        }
+
+        .step-title {
+            font-size: 1.5em;
+            color: #2d3748;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .code-block {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: background 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #5568d3;
+        }
+
+        .copy-btn:active {
+            background: #4c5fc9;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            color: #856404;
+        }
+
+        .info {
+            background: #d1ecf1;
+            border-left: 5px solid #17a2b8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            color: #0c5460;
+        }
+
+        .success {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            color: #155724;
+        }
+
+        .footer {
+            background: #2d3748;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tab {
+            padding: 12px 25px;
+            background: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            background: #e2e8f0;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .step {
+                padding: 15px;
+            }
+            
+            .code-block {
+                font-size: 0.75em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌧️ IMERG Data Download</h1>
+            <p>Quick Guide for NASA GPM Data | User: Alex98</p>
+        </div>
+
+        <div class="content">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('quick')">Quick Start</button>
+                <button class="tab" onclick="showTab('complete')">Complete Script</button>
+                <button class="tab" onclick="showTab('info')">Info</button>
+            </div>
+
+            <!-- QUICK START TAB -->
+            <div id="quick" class="tab-content active">
+                <div class="step">
+                    <h2 class="step-title">
+                        <span class="step-number">1</span>
+                        Setup Authentication
+                    </h2>
+                    <div class="warning">
+                        <strong>⚠️ Important:</strong> Replace <code>abcd1234</code> with your actual NASA Earthdata password! The username and password shown here are examples only.
+                    </div>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre>@"
+machine urs.earthdata.nasa.gov
+login Alex98
+password abcd1234
+"@ | Out-File -FilePath "$env:USERPROFILE\.netrc" -Encoding ASCII
+
+New-Item "$env:USERPROFILE\.urs_cookies" -ItemType File -Force</pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h2 class="step-title">
+                        <span class="step-number">2</span>
+                        Create Folders & URL File
+                    </h2>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre>New-Item -Path "C:\IMERG" -ItemType Directory -Force
+New-Item -Path "C:\IMERG\data" -ItemType Directory -Force
+notepad "C:\IMERG\imerg_urls.txt"</pre>
+                    </div>
+                    <div class="info">
+                        <strong>ℹ️ Note:</strong> Paste your download URLs into Notepad (one URL per line), then Save & Close.
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h2 class="step-title">
+                        <span class="step-number">3</span>
+                        Download Data
+                    </h2>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre>cd C:\IMERG\data
+Get-Content "C:\IMERG\imerg_urls.txt" | ForEach-Object { curl.exe -n -c "$env:USERPROFILE\.urs_cookies" -b "$env:USERPROFILE\.urs_cookies" -LJO --url $_ }</pre>
+                    </div>
+                    <div class="success">
+                        <strong>✅ Done!</strong> Files will be downloaded to <code>C:\IMERG\data\</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPLETE SCRIPT TAB -->
+            <div id="complete" class="tab-content">
+                <div class="step">
+                    <h2 class="step-title">Complete Automated Script</h2>
+                    <p style="margin-bottom: 15px;">Copy and paste this entire script into PowerShell to automate everything:</p>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre># ========================================
+# IMERG DATA DOWNLOAD - COMPLETE SCRIPT
+# ========================================
+
+# 1. Create .netrc file (REPLACE PASSWORD!)
+@"
+machine urs.earthdata.nasa.gov
+login Alex98
+password abcd1234
+"@ | Out-File -FilePath "$env:USERPROFILE\.netrc" -Encoding ASCII
+
+# 2. Create cookies file
+New-Item "$env:USERPROFILE\.urs_cookies" -ItemType File -Force
+
+# 3. Create IMERG folders
+New-Item -Path "C:\IMERG" -ItemType Directory -Force
+New-Item -Path "C:\IMERG\data" -ItemType Directory -Force
+
+# 4. Open notepad to paste URLs
+Write-Host "==================================="
+Write-Host "PASTE YOUR URLS INTO NOTEPAD"
+Write-Host "One URL per line, then SAVE & CLOSE"
+Write-Host "==================================="
+notepad "C:\IMERG\imerg_urls.txt"
+
+# Wait for user to finish editing
+Read-Host "Press ENTER after you saved the URL file"
+
+# 5. Download all files
+cd C:\IMERG\data
+Write-Host "Starting download..."
+Get-Content "C:\IMERG\imerg_urls.txt" | ForEach-Object { 
+    curl.exe -n -c "$env:USERPROFILE\.urs_cookies" -b "$env:USERPROFILE\.urs_cookies" -LJO --url $_ 
+}
+
+Write-Host "Download complete!"
+Write-Host "Files saved to: C:\IMERG\data"</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INFO TAB -->
+            <div id="info" class="tab-content">
+                <div class="step">
+                    <h2 class="step-title">📋 Prerequisites</h2>
+                    <ul style="line-height: 2; margin-left: 20px;">
+                        <li>Windows 10 or later with PowerShell</li>
+                        <li>NASA Earthdata account (<a href="https://urs.earthdata.nasa.gov/" target="_blank">Register here</a>)</li>
+                        <li>curl (pre-installed in Windows 10+)</li>
+                        <li>Internet connection</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <h2 class="step-title">🔐 Account Setup</h2>
+                    <div style="line-height: 2;">
+                        <p><strong>1. Register for a free NASA Earthdata account:</strong></p>
+                        <p style="margin-left: 20px;">- Visit <a href="https://urs.earthdata.nasa.gov/" target="_blank">https://urs.earthdata.nasa.gov/</a></p>
+
+                        <p><strong>2. Replace the credentials in the code:</strong></p>
+                        <p style="margin-left: 20px;">- username = "YOUR_EARTHDATA_USERNAME"</p>
+                        <p style="margin-left: 20px;">- password = "YOUR_EARTHDATA_PASSWORD"</p>
+
+                        <p><strong>3. For the subset file (like your .SUB.nc4), you need to use the GES DISC subset tool instead:</strong></p>
+                        <p style="margin-left: 20px;">- Go to <a href="https://disc.gsfc.nasa.gov/" target="_blank">https://disc.gsfc.nasa.gov/</a></p>
+                        <p style="margin-left: 20px;">- Search for "GPM_3IMERGDL"</p>
+                        <p style="margin-left: 20px;">- Select your date range and spatial subset (Lon: 50-110, Lat: -10 to 40)</p>
+                        <p style="margin-left: 20px;">- Download the subset links file</p>
+
+                        <p><strong>4. Earthdata Login for Data Access:</strong></p>
+                        <p style="margin-left: 20px;">- Use <a href="https://disc.gsfc.nasa.gov/earthdata-login" target="_blank">https://disc.gsfc.nasa.gov/earthdata-login</a> for accessing data through the GES DISC portal.</p>
+                    </div>
+                    <div class="warning">
+                        <strong>⚠️ Important:</strong> The username "Alex98" and password "abcd1234" used in this guide are examples only. Please use your own registered NASA Earthdata credentials.
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h2 class="step-title">📁 File Locations</h2>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 10px; border: 1px solid #dee2e6;"><strong>File</strong></td>
+                            <td style="padding: 10px; border: 1px solid #dee2e6;"><strong>Location</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #dee2e6;">.netrc</td>
+                            <td style="padding: 10px; border: 1px solid #dee2e6;"><code>C:\Users\[YourName]\.netrc</code></td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 10px; border: 1px solid #dee2e6;">.urs_cookies</td>
+                            <td style="padding: 10px; border: 1px solid #dee2e6;"><code>C:\Users\[YourName]\.urs_cookies</code></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #dee2e6;">URL List</td>
+                            <td style="padding: 10px; border: 1px solid #dee2e6;"><code>C:\IMERG\imerg_urls.txt</code></td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 10px; border: 1px solid #dee2e6;">Downloaded Data</td>
+                            <td style="padding: 10px; border: 1px solid #dee2e6;"><code>C:\IMERG\data\</code></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="step">
+                    <h2 class="step-title">🔧 Troubleshooting</h2>
+                    <div style="line-height: 2;">
+                        <p><strong>Problem:</strong> "Access Denied"<br>
+                        <strong>Solution:</strong> Check your username and password in .netrc file</p>
+                        
+                        <p style="margin-top: 15px;"><strong>Problem:</strong> "File not found"<br>
+                        <strong>Solution:</strong> Make sure imerg_urls.txt exists and contains URLs</p>
+                        
+                        <p style="margin-top: 15px;"><strong>Problem:</strong> Downloads stop<br>
+                        <strong>Solution:</strong> Check internet connection and run the download command again</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h2 class="step-title">🔗 Useful Links</h2>
+                    <ul style="line-height: 2; margin-left: 20px;">
+                        <li><a href="https://disc.gsfc.nasa.gov/" target="_blank">NASA GES DISC</a></li>
+                        <li><a href="https://gpm.nasa.gov/data/imerg" target="_blank">GPM IMERG Documentation</a></li>
+                        <li><a href="https://urs.earthdata.nasa.gov/" target="_blank">Earthdata Login</a></li>
+                        <li><a href="https://curl.se/docs/" target="_blank">curl Documentation</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Created by <strong>Alex98</strong> | January 2026</p>
+            <p style="margin-top: 10px;">
+                <a href="https://disc.gsfc.nasa.gov/" target="_blank">NASA GES DISC</a> | 
+                <a href="https://gpm.nasa.gov/" target="_blank">GPM Mission</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            
+            event.target.classList.add('active');
+        }
+
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling;
+            const code = codeBlock.textContent;
+            
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.background = '#28a745';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#667eea';
+                }, 2000);
+            } catch (err) {
+                alert('Failed to copy code. Please copy manually.');
+            }
+            
+            document.body.removeChild(textarea);
+        }
+    </script>
+</body>
+</html>
